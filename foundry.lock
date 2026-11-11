@@ -1,0 +1,20 @@
+{
+  "lib/aave-address-book": {
+    "tag": {
+      "name": "v4.46.4",
+      "rev": "e1af194a9ee8afc168a320e28de39305db30af7f"
+    }
+  },
+  "lib/aave-helpers": {
+    "branch": {
+      "name": "main",
+      "rev": "2b6800241368a1f5caa6f243cc13106e590a183e"
+    }
+  },
+  "lib/aave-umbrella": {
+    "tag": {
+      "name": "v1.0.0",
+      "rev": "d34359f567da4fbb58685e114cd1b824d8300fac"
+    }
+  }
+}

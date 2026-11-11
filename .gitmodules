@@ -1,0 +1,10 @@
+[submodule "lib/aave-helpers"]
+	path = lib/aave-helpers
+	url = git@github.com:aave-dao/aave-helpers.git
+	branch = main
+[submodule "lib/aave-umbrella"]
+	path = lib/aave-umbrella
+	url = https://github.com/aave-dao/aave-umbrella
+[submodule "lib/aave-address-book"]
+	path = lib/aave-address-book
+	url = https://github.com/bgd-labs/aave-address-book

@@ -1,0 +1,63 @@
+name: Test
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aave-dao/github-workflows/.github/actions/setup-node@main
+
+      - name: Enforce linting
+        run: npm run lint --check
+
+  test-sol:
+    name: Foundry build n test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: aave-dao/action-rpc-env@main
+        with:
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+
+      # we simply use foundry zk for all jobs in this repo
+      - name: Run Foundry setup
+        uses: aave-dao/github-workflows/.github/actions/foundry-setup@main
+        with:
+          ZKSYNC: "false"
+
+      - name: Run Forge tests
+        id: test
+        uses: aave-dao/github-workflows/.github/actions/foundry-test@main
+        with:
+          MODE: "ALL"
+          FOUNDRY_PROFILE: "test"
+
+      - name: Create comment
+        uses: aave-dao/github-workflows/.github/actions/comment-artifact@main
+
+      # we let failing tests pass so we can log them in the comment, still we want the ci to fail
+      - name: Post test result
+        if: ${{ steps.test.outputs.testStatus != 0 }}
+        run: |
+          echo "tests failed"
+          exit 1
+
+  test-js:
+    uses: aave-dao/github-workflows/.github/workflows/test-node.yml@main
